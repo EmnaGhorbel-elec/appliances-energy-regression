@@ -29,11 +29,19 @@ statistics are computed on the training set only to avoid leakage.
 
 ## Results
 
-| Model | Train R² | Test R² |
-|-------|----------|---------|
-| Linear (gradient descent) | | |
-| Linear (analytical) | | |
-| Ridge (best λ = ) | | |
+| Model | Train R² | Test R² | Test RMSE (Wh) |
+|-------|----------|---------|----------------|
+| Linear (analytical / normal equation) | 0.1718 | 0.0843 | 87.63 |
+| Linear (gradient descent, α=0.01) | 0.1699 | 0.0729 | 88.18 |
+| **Ridge (best λ ≈ 1351)** | 0.1536 | **0.1029** | **86.74** |
+| Top-5 weights (collinear features) | 0.0789 | -0.2768 | 103.48 |
+| Top-10 correlated features | 0.1280 | 0.0753 | 88.06 |
+
+**Takeaways**
+- Gradient descent converges to essentially the same solution as the normal equation (R² 0.1699 vs 0.1718), which confirms the implementation.
+- Ridge gives the best test performance (R² = 0.103, RMSE = 86.7 Wh). Regularization trades a little train fit for better generalization.
+- A linear model explains only about 10% of the variance in appliance consumption, so the relationship is strongly nonlinear. Next steps would be lag features, time-of-day features, or nonlinear models (e.g. random forest, gradient boosting).
+- Selecting features from the largest |θ| values backfires (negative test R²) because those features are collinear.
 
 ## Run it
 
